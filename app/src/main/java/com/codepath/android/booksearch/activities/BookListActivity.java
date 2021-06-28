@@ -1,5 +1,6 @@
 package com.codepath.android.booksearch.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -33,6 +35,7 @@ public class BookListActivity extends AppCompatActivity {
     private BookAdapter bookAdapter;
     private BookClient client;
     private ArrayList<Book> abooks;
+    private String book;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,8 @@ public class BookListActivity extends AppCompatActivity {
                         BookListActivity.this,
                         "An item at position " + position + " clicked!",
                         Toast.LENGTH_SHORT).show();
+                goToTrailer(abooks.get(position));
+
 
                 // Handle item click here:
                 // Create Intent to start BookDetailActivity
@@ -72,6 +77,15 @@ public class BookListActivity extends AppCompatActivity {
         //fetchBooks("Oscar Wilde");
     }
 
+    // When the user clicks on a row, show MovieDetailsActivity for the selected movie
+    public void goToTrailer(Book position) {
+        // create intent for the new activity
+        Intent intent = new Intent(this, BookDetailActivity.class);
+        // serialize the movie using parceler, use its short name as a key
+        intent.putExtra(BookDetailActivity.class.getSimpleName(), Parcels.wrap(position));
+        // show the activity
+        startActivity(intent);
+    }
 
     // Executes an API call to the OpenLibrary search endpoint, parses the results
     // Converts them into an array of book objects and adds them to the adapter
@@ -152,4 +166,6 @@ public class BookListActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
